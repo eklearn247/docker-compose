@@ -1,0 +1,11 @@
+---
+services:
+  focalboard:
+    image: mattermost/focalboard
+    container_name: focalboard
+    restart: always
+    volumes:
+      - ./data:/data
+      - ./config/config.json:/config.json
+    ports:
+      - 8001:8000
