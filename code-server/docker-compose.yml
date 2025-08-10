@@ -1,17 +1,28 @@
 ---
-version: "2.1"
+networks:
+  caddy-net:
+    external: true
+
 services:
   code-server:
     image: lscr.io/linuxserver/code-server:latest
+    hostname: code-server
     container_name: code-server
-    restart: always
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Dubai
-      - PASSWORD=password#optional
+      - PASSWORD=SUPERsecret
+      #- HASHED_PASSWORD= #optional
+      - SUDO_PASSWORD=SUPERsecret #optional
+      #- SUDO_PASSWORD_HASH= #optional
+      - PROXY_DOMAIN=code.example.com #optional
       - DEFAULT_WORKSPACE=/config/workspace #optional
+      - PWA_APPNAME=code-server #optional  
     volumes:
       - ./config:/config
     ports:
-      - 8002:8443
+      - 8443:8443
+    networks:
+      - caddy-net

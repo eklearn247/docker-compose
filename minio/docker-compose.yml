@@ -1,0 +1,26 @@
+---
+networks:
+  caddy-net:
+    external: true
+
+services:
+  minio:
+    #image: quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z # Latest, as of 10 Jul 2025
+    #image: quay.io/minio/minio:RELEASE.2025-05-24T17-08-30Z # MinIO significantly stripped its Web UI admin features from the open-source version with this release 
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z # Last MINIO release before Web UI admin features were stripped from OSS version
+    container_name: minio
+    hostname: minio
+    restart: always
+    command: server --console-address ":9001" /data
+    environment:
+      - MINIO_ROOT_USER=user
+      - MINIO_ROOT_PASSWORD=SUPERsecret
+      - TZ=Asia/Dubai
+    ports:
+       - 9000:9000   # Port 9000 – S3 API Access
+       - 9001:9001   # Port 9001 – Web Console UI
+    shm_size: "2gb"
+    volumes:
+        - ./minio_data:/data
+    networks:
+        - caddy-net
